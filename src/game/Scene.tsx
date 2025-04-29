@@ -7,7 +7,7 @@ import Player from "./Player";
 export default function Scene() {
   return (
     <div className="absolute top-0 left-0 w-screen h-screen bg-gray-700">
-      <Canvas camera={{ position: [0.5, 2, -5] }}>
+      <Canvas camera={{ position: [0.5, 2, 5] }}>
         <Physics>
           <ambientLight intensity={2} />
           <directionalLight intensity={3} position={[1, 5, 5]} />

@@ -5,7 +5,7 @@ export default function Floor() {
     <RigidBody type="fixed">
       <mesh scale={[10, 0.5, 10]}>
         <boxGeometry />
-        <meshStandardMaterial color="red" />
+        <meshStandardMaterial color="#5EAD57" />
       </mesh>
     </RigidBody>
   );

@@ -16,7 +16,8 @@ const createWindow = () => {
     width: 1200,
     height: 800,
     autoHideMenuBar: true,
-    frame: false,
+    // frame: false,
+    // fullscreen: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },
@@ -34,7 +35,7 @@ const createWindow = () => {
   }
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
