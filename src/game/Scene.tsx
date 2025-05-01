@@ -3,8 +3,11 @@ import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
 import Floor from "./Floor";
 import Player from "./Player";
+import { useMemo } from "react";
+import { Controls } from "../logic/controlers/Controls";
 
 export default function Scene() {
+  const controls = useMemo(() => new Controls(), []);
   return (
     <div className="absolute top-0 left-0 w-screen h-screen bg-gray-700">
       <Canvas camera={{ position: [0.5, 2, 5] }}>

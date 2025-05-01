@@ -1,61 +1,42 @@
 import { useFrame } from "@react-three/fiber";
 import { RapierRigidBody, RigidBody } from "@react-three/rapier";
-import { useEffect, useReducer, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import { Controls } from "../logic/controlers/Controls";
+import { Action } from "../logic/controlers/Accion";
 
-interface tMapKey {
-  [key: string]: boolean;
-}
-
-function keyMapControl(mapCurrent: tMapKey, e: KeyboardEvent) {
-  //si la tecla que oprimio no esta en el map
-  if (mapCurrent[e.code] === undefined) {
-    return mapCurrent;
-  }
-  if (e.type === "keydown" && mapCurrent[e.code] !== true) {
-    mapCurrent[e.code] = true;
-    return { ...mapCurrent };
-  } else if (e.type === "keyup" && mapCurrent[e.code] !== false) {
-    mapCurrent[e.code] = false;
-    return { ...mapCurrent };
-  } else {
-    return mapCurrent;
-  }
-}
 export default function Player() {
-  const [keymap, dispatch] = useReducer(keyMapControl, {
-    KeyW: false,
-    KeyS: false,
-  });
-
+  const controls = useMemo(() => new Controls(), []);
   const rigidBodyRef = useRef<RapierRigidBody>(null);
-  const validKey = (e: KeyboardEvent) => {
-    const newState = keyMapControl(keymap, e);
-    if (newState === keymap) return null;
-    dispatch(e);
-  };
   useEffect(() => {
-    document.addEventListener("keydown", validKey);
-    document.addEventListener("keyup", validKey);
-
-    return () => {
-      document.removeEventListener("keydown", validKey);
-      document.removeEventListener("keypress", validKey);
-    };
+    controls.addAction(
+      new Action("fordwards", ["keyboard-ArrowUp", "keyboard-KeyW"])
+    );
+    controls.addAction(
+      new Action("backwards", ["keyboard-ArrowDown", "keyboard-KeyS"])
+    );
+    controls.addAction(
+      new Action("right", ["keyboard-ArrowRight", "keyboard-KeyD"])
+    );
+    controls.addAction(
+      new Action("left", ["keyboard-ArrowLeft", "keyboard-KeyA"])
+    );
   }, []);
 
   useFrame(() => {
+    const { fordwards, backwards, right, left } = controls.getCurrent();
     const speed = 5;
     const rb = rigidBodyRef.current;
     if (!rb) return;
 
     const vel = rb.linvel();
-    const impulse = { x: 0, y: vel.y, z: 0 };
-    if (keymap["KeyW"]) impulse.z -= speed;
-    if (keymap["KeyS"]) impulse.z += speed;
+    const impulse = {
+      x: (Number(right) - Number(left)) * speed,
+      y: vel.y,
+      z: (-Number(fordwards) + Number(backwards)) * speed,
+    };
 
     rb.setLinvel(impulse, true);
   });
-  console.log(keymap);
   return (
     <RigidBody ref={rigidBodyRef}>
       <mesh position={[0, 3, 0]}>
