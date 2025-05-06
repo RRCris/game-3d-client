@@ -1,7 +1,7 @@
 import { Action } from "./Accion";
 
 export type tCurrent = {
-  [key: string]: boolean;
+  [key: string]: boolean | undefined;
 };
 export class Controls {
   actions: Action[] = [];
